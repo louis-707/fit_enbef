@@ -16,7 +16,7 @@ X, Y, Z = np.meshgrid(xmesh, ymesh, zmesh, indexing="ij")
 Phi = X**2 * np.sin(2 * np.pi * Z)
 phi = Phi.reshape(model.Np)
 
-
+#
 ebow = -G.dot(phi)
 
 
