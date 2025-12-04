@@ -151,9 +151,22 @@ class Mesh:
         np.ndarray (bool)
             False if ghost-element, true otherwise (sorted according to global canonical indexing)
         """
-        raise ("Implement in 7.3")
-        idxs = None
+        idxs = np.ones(3 * self.Np, dtype=bool)
 
+        for i in range(self.Nx):
+            for j in range(self.Ny):
+                for k in range(self.Nz):
+
+                    n0 = self.canonical_index(i + 1, j + 1, k + 1) - 1
+
+                    if i == self.Nx - 1:
+                        idxs[n0] = False
+
+                    if j == self.Ny - 1:
+                        idxs[self.Np + n0] = False
+
+                    if k == self.Nz - 1:
+                        idxs[2 * self.Np + n0] = False
         return idxs
 
     @cached_property
@@ -165,10 +178,24 @@ class Mesh:
         np.ndarray (bool)
             False if ghost-element, true otherwise (sorted according to global canonical indexing)
         """
-        raise ("Implement in 7.3")
-        primal_idxa = None
+        idxa = np.ones(3 * self.Np, dtype=bool)
 
-        return primal_idxa
+        for i in range(self.Nx):
+            for j in range(self.Ny):
+                for k in range(self.Nz):
+
+                    n0 = self.canonical_index(i + 1, j + 1, k + 1) - 1
+
+                    if i == self.Nx - 1:
+                        idxa[n0] = False
+
+                    if j == self.Ny - 1:
+                        idxa[self.Np + n0] = False
+
+                    if k == self.Nz - 1:
+                        idxa[2 * self.Np + n0] = False
+
+        return idxa
 
     @cached_property
     def primal_idxv(self) -> ndarray[tuple[int], dtype[bool]]:
@@ -179,10 +206,18 @@ class Mesh:
         np.ndarray (bool)
             False if ghost-element, true otherwise.
         """
-        raise ("Implement in 7.3")
-        primal_idxv = None
+        idxv = np.ones(self.Np, dtype=bool)
 
-        return primal_idxv
+        for i in range(self.Nx):
+            for j in range(self.Ny):
+                for k in range(self.Nz):
+
+                    n0 = self.canonical_index(i + 1, j + 1, k + 1) - 1
+
+                    if i == self.Nx - 1 or j == self.Ny - 1 or k == self.Nz - 1:
+                        idxv[n0] = False
+
+        return idxv
 
     def __create_p(self, offset: int) -> sp.csr_array:
         """Return sparse matrix with value -1 on main diagonal and 1 on second diagonal shifted by
@@ -209,8 +244,6 @@ class Mesh:
             shape=(Np, Np),
             format="lil",  # format lists of lits weil sich leichter modifzieren lässt, später dann return in 'csr' format
         )
-
-        # ?? korrektur der Geisterkanten etc.
 
         return P.tocsr()
 
