@@ -3,7 +3,7 @@ from pyevtk.hl import gridToVTK
 import numpy as np
 
 
-Nx = Ny = Nz = 21
+Nx = Ny = Nz = 100
 xmesh = np.linspace(-1, 1, Nx)
 ymesh = np.linspace(-1, 1, Ny)
 zmesh = np.linspace(-1, 1, Nz)
@@ -37,4 +37,20 @@ exyz = (
     ebow[model.Np : 2 * model.Np],
     ebow[2 * model.Np : 3 * model.Np],
 )
-gridToVTK("./ex7", xmesh, ymesh, zmesh, pointData={"ebow": exyz})
+gridToVTK("./ex7", xmesh, ymesh, zmesh, pointData={"ebow": exyz, "phi": phi})
+
+
+phi_111 = phi[model.canonical_index(1, 1, 1) - 1]
+phi_211 = phi[model.canonical_index(2, 1, 1) - 1]
+
+e1_manual = -(phi_211 - phi_111)
+
+print("e_bow_1 =", e1_manual)
+print("operator e1       =", ebow[0 : model.Np][0])
+
+
+phi_112 = phi[model.canonical_index(1, 1, 2) - 1]
+e2Np1_manual = -(phi_112 - phi_111)
+
+print("ebow_(2Np+1) =", e2Np1_manual)
+print("operator e_(2Np+1)      =", ebow[2 * model.Np : 3 * model.Np][0])
