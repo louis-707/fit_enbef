@@ -2,21 +2,24 @@ import fit
 from pyevtk.hl import gridToVTK
 import numpy as np
 
+
 Nx = Ny = Nz = 21
 xmesh = np.linspace(-1, 1, Nx)
 ymesh = np.linspace(-1, 1, Ny)
 zmesh = np.linspace(-1, 1, Nz)
 
-model = fit.mesh(xmesh, ymesh, zmesh)
+model = fit.Mesh(xmesh, ymesh, zmesh)
 
-S_tilde = model.dual_div()
+S_tilde = model.dual_div
 G = -S_tilde.T
+
+for N
 
 X, Y, Z = np.meshgrid(xmesh, ymesh, zmesh, indexing="ij")
 Phi = X**2 * np.sin(2 * np.pi * Z)
 phi = Phi.reshape(model.Np)
 
-#
+
 ebow = -G.dot(phi)
 
 
