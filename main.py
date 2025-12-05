@@ -4,9 +4,9 @@ import numpy as np
 
 
 Nx = Ny = Nz = 100
-xmesh = np.linspace(-1, 1, Nx)
-ymesh = np.linspace(-1, 1, Ny)
-zmesh = np.linspace(-1, 1, Nz)
+xmesh = np.linspace(-2, 2, Nx)
+ymesh = np.linspace(-2, 2, Ny)
+zmesh = np.linspace(-2, 2, Nz)
 
 model = fit.Mesh(xmesh, ymesh, zmesh)
 
@@ -25,8 +25,11 @@ for i in range(Nx):
         for k in range(Nz):
             idx = model.canonical_index(i, j, k)
             x = xmesh[i]
+            y = ymesh[j]
             z = zmesh[k]
-            phi[idx] = x**2 * np.sin(2 * np.pi * z)
+            phi[idx] = +8 * np.exp(
+                -(((x + 0.5) ** 2 + (y + 0.5) ** 2 + (z + 0.5) ** 2) / 0.18)
+            ) - 8 * np.exp(-(((x - 0.5) ** 2 + (y - 0.5) ** 2 + (z - 0.5) ** 2) / 0.18))
 
 
 ebow = -G.dot(phi)
@@ -42,6 +45,10 @@ gridToVTK("./ex7", xmesh, ymesh, zmesh, pointData={"ebow": exyz, "phi": phi})
 
 phi_111 = phi[model.canonical_index(1, 1, 1) - 1]
 phi_211 = phi[model.canonical_index(2, 1, 1) - 1]
+phi_112 = phi[model.canonical_index(1, 1, 2) - 1]
+print(phi_111)
+print(phi_211)
+print(phi_112)
 
 e1_manual = -(phi_211 - phi_111)
 
@@ -49,7 +56,6 @@ print("e_bow_1 =", e1_manual)
 print("operator e1       =", ebow[0 : model.Np][0])
 
 
-phi_112 = phi[model.canonical_index(1, 1, 2) - 1]
 e2Np1_manual = -(phi_112 - phi_111)
 
 print("ebow_(2Np+1) =", e2Np1_manual)
