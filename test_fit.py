@@ -11,10 +11,8 @@ from pathlib import Path
 import numpy as np
 import pytest
 from scipy.io import loadmat
+import fit as fit_studi
 
-from fit import (
-    Mesh as fit_studi,
-)  # ToDo: Importiert eure eigene Mesh Klasse hier. Achtet auf paths!
 
 COMPARE_MATPATH = Path(__file__).parent / "vergleichsmatrizen.mat"
 TOL = 1e-7
